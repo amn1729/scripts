@@ -7,6 +7,7 @@ use Term::ANSIColor;
 $| = 1;
 
 my @SERVERS = (
+    # Name ,   Command     , File/Directory
     ['Vite', 'yarn dev' , 'node_modules/vite'],
     ['Svelte', 'yarn dev' , 'node_modules/svelte'],
     ['Nestjs', 'yarn run start:dev' , 'node_modules/@nestjs'],
@@ -24,11 +25,10 @@ sub error_exit {
 sub main {
     foreach my $server (@SERVERS) {
         my ($name, $cmd, $file) = @$server;
-        if (-d $file || -f $file) {
-            print colored("Running $name server ...\n", "green");
-            system($cmd);
-            exit;
-        }
+        next unless (-d $file || -f $file);
+        print colored("Running $name server ...\n", "green");
+        system($cmd);
+        exit;
     }
     error_exit();
 }
